@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Request{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Create Request</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Form Fields -->
+        <div class="mb-3">
+            <label for="id_item" class="form-label">Item <span class="text-danger">*</span></label>
+            {{ form.item }}
+            {% if form.item.errors %}
+                <small class="text-danger">{{ form.item.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_reason" class="form-label">Reason <span class="text-danger">*</span></label>
+            {{ form.reason }}
+            {% if form.reason.errors %}
+                <small class="text-danger">{{ form.reason.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_priority" class="form-label">Priority <span class="text-danger">*</span></label>
+            {{ form.priority }}
+            {% if form.priority.errors %}
+                <small class="text-danger">{{ form.priority.errors|striptags }}</small>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
+```
