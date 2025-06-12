@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Admin route
     path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),  # Login page
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),  # Logout
-    path('dashboard/', views.dashboard, name='dashboard'),  # Dashboard route
+    path('dashboard/', views.dashboard, name='dashboard'), # Dashboard route
+    path('available-inventory/', views.available_inventory, name='available_inventory'),
     path('create-request/', views.create_request, name='create_request'),
 ]
 

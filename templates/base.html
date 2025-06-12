@@ -100,53 +100,61 @@
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar d-flex align-items-center justify-content-between">
-        <!-- Left side: Hamburger icon and Portal Title -->
-        <div>
-            <span id="hamburgerIcon" class="hamburger-icon">☰</span>
-            <span class="navbar-brand ms-3">Inventory Portal</span>
-        </div>
-
-        <!-- Right side: Logout -->
-        <a href="{% url 'logout' %}" class="logout">
-            Logout <i class="bi bi-box-arrow-right"></i>
-        </a>
-    </nav>
-
-    <!-- Custom Dropdown Menu -->
-    <div id="dropdownMenu" class="dropdown-menu">
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'create_request' %}">Create Request</a>
-        <!-- Add more navigation links here -->
+<!-- Navbar -->
+<nav class="navbar d-flex align-items-center justify-content-between">
+    <!-- Left side: Hamburger icon and Portal Title -->
+    <div>
+        <span id="hamburgerIcon" class="hamburger-icon">☰</span>
+        <span class="navbar-brand ms-3">Inventory Portal</span>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        {% block content %}
-        {% endblock %}
-    </div>
+    <!-- Right side: Logout -->
+    <a href="{% url 'logout' %}" class="logout">
+        Logout <i class="bi bi-box-arrow-right"></i>
+    </a>
+</nav>
 
-    <!-- Optional Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<!-- Custom Dropdown Menu -->
+<div id="dropdownMenu" class="dropdown-menu">
+    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        Dashboard
+    </a>
+    <a href="{% url 'create_request' %}"
+       class="{% if request.resolver_match.url_name == 'create_request' %}active{% endif %}">
+        Create Request
+    </a>
+    <a href="{% url 'available_inventory' %}"
+       class="{% if request.resolver_match.url_name == 'available_inventory' %}active{% endif %}">
+        Available Inventory
+    </a>
+</div>
 
-    <!-- JavaScript to Toggle Dropdown Menu -->
-    <script>
-        const hamburgerIcon = document.getElementById('hamburgerIcon');
-        const dropdownMenu = document.getElementById('dropdownMenu');
+<!-- Main Content -->
+<div class="main-content">
+    {% block content %}
+    {% endblock %}
+</div>
 
-        // Toggle the dropdown menu
-        hamburgerIcon.addEventListener('click', () => {
-            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-        });
+<!-- Optional Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-        // Close the dropdown when clicking anywhere outside
-        document.addEventListener('click', function(event) {
-            const isClickInside = dropdownMenu.contains(event.target) || hamburgerIcon.contains(event.target);
-            if (!isClickInside) {
-                dropdownMenu.style.display = 'none';
-            }
-        });
-    </script>
+<!-- JavaScript to Toggle Dropdown Menu -->
+<script>
+    const hamburgerIcon = document.getElementById('hamburgerIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    // Toggle the dropdown menu
+    hamburgerIcon.addEventListener('click', () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Close the dropdown when clicking anywhere outside
+    document.addEventListener('click', function (event) {
+        const isClickInside = dropdownMenu.contains(event.target) || hamburgerIcon.contains(event.target);
+        if (!isClickInside) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
