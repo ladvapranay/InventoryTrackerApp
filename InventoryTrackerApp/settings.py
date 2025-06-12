@@ -32,10 +32,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'inventory'
 ]
 
 MIDDLEWARE = [
@@ -53,7 +55,7 @@ ROOT_URLCONF = 'InventoryTrackerApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / 'inventory/../templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -119,4 +121,8 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+LOGIN_URL = '/login/'  # When logged in goes to here
+LOGIN_REDIRECT_URL = '/dashboard/'  # Once logged in
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

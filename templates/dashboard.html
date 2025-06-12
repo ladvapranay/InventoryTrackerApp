@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Inventory Portal{% endblock %}
+
+{% block content %}
+<h1 class="h4">Welcome to the Dashboard!</h1>
+
+<!-- Example Table for Requests -->
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Requested By</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ request.item.name }}</td>
+            <td>{{ request.requested_by.username }}</td>
+            <td>{{ request.reason }}</td>
+            <td>{{ request.status }}</td>
+            <td>
+                <a href="{% url 'view_request' request.id %}" class="text-primary">View</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">No Requests Found!</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
