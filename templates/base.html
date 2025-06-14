@@ -116,8 +116,8 @@
 
 <!-- Custom Dropdown Menu -->
 <div id="dropdownMenu" class="dropdown-menu">
-    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        Dashboard
+    <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+        View Requests
     </a>
     <a href="{% url 'create_request' %}"
        class="{% if request.resolver_match.url_name == 'create_request' %}active{% endif %}">
