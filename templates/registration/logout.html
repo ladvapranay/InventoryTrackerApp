@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Logout{% endblock %}
+
+{% block content %}
+    <div class="container text-center d-flex flex-column justify-content-start align-items-center"
+         style="min-height: 80vh; padding-top: 10vh;">
+
+        {% if logged_out %}
+            <!-- After Logout -->
+            <h2>You have been logged out successfully.</h2>
+
+            <!-- Green Tick Icon -->
+            <div class="mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 16 16" fill="none">
+                    <!-- Green Circle -->
+                    <circle cx="8" cy="8" r="7.5" fill="green"/>
+
+                    <!-- White Tick (Shifted Slightly Right and Up) -->
+                    <path d="M6.4 10.2L5.1 8.9C4.7 8.5 4.1 8.5 3.7 8.9C3.3 9.3 3.3 9.9 3.7 10.3L5.7 12.3C5.9 12.5 6.2 12.6 6.5 12.6C6.8 12.6 7.1 12.5 7.3 12.3L12.3 7.3C12.7 6.9 12.7 6.3 12.3 5.9C11.9 5.5 11.3 5.5 10.9 5.9L6.4 10.2Z"
+                          fill="white"/>
+                </svg>
+            </div>
+
+            <!-- Login Again Button -->
+            <div class="mt-4">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">Login Again</a>
+            </div>
+
+            <!-- Thank You Message -->
+            <p class="mt-4" style="font-size: 1.5rem;">Thank you</p>
+
+        {% else %}
+            <!-- Show hidden modal (it will automatically open via JS on page load) -->
+            <div class="modal fade show" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel"
+                 aria-hidden="true" style="display: block; background: rgba(0,0,0,0.5);">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header text-center flex-column">
+                            <!-- Centering the question -->
+                            <h5 class="modal-title w-100" id="logoutModalLabel">Are you sure you want to log out?</h5>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger me-3">Yes, Log Out</button>
+                            </form>
+                            <a href="{% url 'home' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+<!-- Inline Script to Make Modal Visible -->
+{% if not logged_out %}
+    <script>
+        window.onload = function () {
+            const modal = document.getElementById('logoutModal');
+            modal.style.display = 'block'; // Show modal immediately
+        };
+    </script>
+{% endif %}
