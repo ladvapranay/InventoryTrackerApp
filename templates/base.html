@@ -10,6 +10,31 @@
 
     <!-- Custom Styles -->
     <style>
+        /* Ensure table respects fixed layout */
+        table {
+            table-layout: fixed; /* Forces fixed-width column behavior */
+            width: 100%; /* Ensure the table spans its container fully */
+        }
+
+        /* Apply wrapping behavior to specific cells or columns */
+        .text-wrap {
+            word-wrap: break-word; /* Forces text to break at words or boundaries */
+            word-break: break-word; /* Ensures unbroken text like URLs or long spans break too */
+            white-space: normal; /* Allows the text to wrap to new lines */
+            overflow-wrap: break-word; /* Alternative to force-breaking long strings */
+        }
+
+        /* Optional: Impose max height/width constraints to ensure visual balance */
+        .text-wrap {
+            max-width: 300px; /* Use a size comfortable for your layout */
+            overflow: hidden; /* Prevent overflow content visually spilling */
+        }
+
+        th, td {
+            text-align: left; /* Ensure text aligns properly */
+            vertical-align: top; /* Text starts at the top of the cell */
+        }
+
         /* Body Styling */
         body {
             margin: 0;
