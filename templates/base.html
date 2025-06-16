@@ -33,9 +33,13 @@
 
         /* Navbar Brand */
         .navbar .navbar-brand {
-            font-size: 20px; /* Increase font size */
+            font-size: 26px; /* Increase font size */
             font-weight: bold;
             color: #333; /* Dark gray for title text */
+        }
+
+        .navbar div {
+            margin-top: 5px; /* Globally pushes elements down */
         }
 
         /* Dropdown Menu Styling */
@@ -90,10 +94,18 @@
 
         /* Hamburger Icon Styling */
         .hamburger-icon {
-            font-size: 24px;
+            font-size: 26px;
             cursor: pointer;
+            position: relative;
+            top: -7.5px;
+            vertical-align: middle;
             user-select: none;
             color: #333;
+        }
+
+        .hamburger-icon:hover {
+            background-color: rgba(211, 211, 211, 0.3); /* Super light grey background */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional soft shadow */
         }
 
         /* Responsive Adjustments */
@@ -110,7 +122,9 @@
     <!-- Left side: Hamburger icon and Portal Title -->
     <div>
         <span id="hamburgerIcon" class="hamburger-icon">☰</span>
-        <span class="navbar-brand ms-3">Inventory Portal</span>
+        <span class="navbar-brand ms-3">
+            Inventory Portal <i class="bi bi-box"></i> <!-- Add icon here -->
+        </span>
     </div>
 
     <!-- Right side: Logout -->
