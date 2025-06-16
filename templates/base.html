@@ -36,6 +36,11 @@
             font-size: 26px; /* Increase font size */
             font-weight: bold;
             color: #333; /* Dark gray for title text */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+
+        .navbar-brand:hover {
         }
 
         .navbar div {
@@ -122,9 +127,9 @@
     <!-- Left side: Hamburger icon and Portal Title -->
     <div>
         <span id="hamburgerIcon" class="hamburger-icon">☰</span>
-        <span class="navbar-brand ms-3">
-            Inventory Portal <i class="bi bi-box"></i> <!-- Add icon here -->
-        </span>
+        <a href="{% url 'home' %}" class="navbar-brand ms-3">
+            Inventory Portal <i class="bi bi-box"></i>
+        </a>
     </div>
 
     <!-- Right side: Logout -->
