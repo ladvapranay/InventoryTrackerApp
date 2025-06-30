@@ -1,49 +1,124 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard | Inventory Management{% endblock %}
+{% block title %}Dashboard | Inventory Portal{% endblock %}
 
 {% block content %}
-<h1>Welcome, {{ request.user.username }}!</h1>
-<h2>Your Dashboard</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Request ID</th>
-            <th>Item</th>
-            <th>Reason</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Requested By</th>
-            {% if is_admin %}
-                <th>Actions</th>
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for req in requests %}
+    <div class="container-fluid mt-5"> <!-- Using container-fluid for full width -->
+        <h3 class="mb-4">Your Inventory Requests:</h3> <!-- Title -->
+
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <td>{{ req.id }}</td>
-                <td>{{ req.item.name }}</td>
-                <td>{{ req.reason }}</td>
-                <td>{{ req.priority }}</td>
-                <td>{{ req.status }}</td>
-                <td>{{ req.requested_by.username }}</td>
+                <th>Request ID</th>
+                <th>Item</th>
+                <th>Reason</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Requested By</th>
                 {% if is_admin %}
-                    <td>
-                        <a href="{% url 'edit_request' req.id %}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{% url 'delete_request' req.id %}" method="POST" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
+                    <th>Actions</th>
                 {% endif %}
             </tr>
-        {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">No requests found.</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+            {% for req in requests %}
+                <tr>
+                    <td>{{ req.id }}</td>
+                    <td>{{ req.item.name }}</td>
+                    <td>{{ req.reason }}</td>
+                    <td>{{ req.priority }}</td>
+                    <td>{{ req.status }}</td>
+                    <td>{{ req.requested_by.username }}</td>
+                    {% if is_admin %}
+                        <td>
+                            <!-- Edit Icon -->
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#editModal{{ req.id }}"
+                               class="text-warning me-3" title="Edit">
+                                <i class="fas fa-edit" style="font-size: 1.5rem;"></i> <!-- Increased size -->
+                            </a>
+
+                            <!-- Delete Icon -->
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteModal{{ req.id }}"
+                               class="text-danger" title="Delete">
+                                <i class="fas fa-trash" style="font-size: 1.5rem;"></i> <!-- Increased size -->
+                            </a>
+
+                            <!-- Edit Modal -->
+                            <div class="modal fade" id="editModal{{ req.id }}" tabindex="-1"
+                                 aria-labelledby="editModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{% url 'edit_request' req.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editModalLabel">Edit Request</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <label for="status{{ req.id }}" class="form-label">Change
+                                                    Status:</label>
+                                                <select name="status" id="status{{ req.id }}" class="form-select">
+                                                    <option value="New" {% if req.status == 'New' %}selected{% endif %}>
+                                                        New
+                                                    </option>
+                                                    <option value="In Progress"
+                                                            {% if req.status == 'In Progress' %}selected{% endif %}>In
+                                                        Progress
+                                                    </option>
+                                                    <option value="Completed"
+                                                            {% if req.status == 'Completed' %}selected{% endif %}>
+                                                        Completed
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-warning">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal{{ req.id }}" tabindex="-1"
+                                 aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{% url 'delete_request' req.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel">Delete Request</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete this request? This action cannot be
+                                                undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No requests found.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
