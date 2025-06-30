@@ -152,7 +152,7 @@
     <!-- Left side: Hamburger icon and Portal Title -->
     <div>
         <span id="hamburgerIcon" class="hamburger-icon">☰</span>
-        <a href="{% url 'home' %}" class="navbar-brand ms-3">
+        <a href="{% url 'dashboard' %}" class="navbar-brand ms-3">
             Inventory Portal <i class="bi bi-box"></i>
         </a>
     </div>
@@ -165,7 +165,7 @@
 
 <!-- Custom Dropdown Menu -->
 <div id="dropdownMenu" class="dropdown-menu">
-    <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+    <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         View Requests <i class="fas fa-list"></i>
     </a>
     <a href="{% url 'create_request' %}"

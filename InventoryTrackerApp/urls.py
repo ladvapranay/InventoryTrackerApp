@@ -1,19 +1,3 @@
-"""
-URL configuration for InventoryTrackerApp project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
@@ -21,10 +5,13 @@ from django.contrib.auth import views as auth_views
 from inventory import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Admin route
-    path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),  # Login page
+    path('admin/', admin.site.urls),  # Admin portal
+    path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),  # Login
+    path('dashboard/', views.dashboard, name='dashboard'),  # Unified dashboard
     path('logout/', views.logout_view, name='logout'),  # Logout
-    path('home/', views.home, name='home'),  # Dashboard route
-    path('available-inventory/', views.available_inventory, name='available_inventory'),
-    path('create-request/', views.create_request, name='create_request'),
+    path('available-inventory/', views.available_inventory, name='available_inventory'),  # View inventory
+    path('create-request/', views.create_request, name='create_request'),  # Create request
+    path('requests/edit/<int:request_id>/', views.edit_request, name='edit_request'),  # Edit request (Admin only)
+    path('requests/delete/<int:request_id>/', views.delete_request, name='delete_request'),
+    # Delete request (Admin only)
 ]
