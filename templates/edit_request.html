@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Request{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h3>Edit Status for Request #{{ inventory_request.id }}</h3>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="status">Select New Status:</label>
+                <select id="status" name="status" class="form-control">
+                    <option value="New" {% if inventory_request.status == 'New' %}selected{% endif %}>New</option>
+                    <option value="In Progress" {% if inventory_request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Approved" {% if inventory_request.status == 'Approved' %}selected{% endif %}>Completed</option>
+                    <option value="Rejected" {% if inventory_request.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <button class="btn btn-success" type="submit">Update Status</button>
+            <a class="btn btn-secondary" href="{% url 'dashboard' %}">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

@@ -5,37 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Inventory Portal{% endblock %}</title>
 
-    <!-- Add Bootstrap CSS (optional for responsiveness) -->
+    <!-- Add Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <!-- Custom Styles -->
     <style>
-        /* Ensure table respects fixed layout */
+        /* Styling for components */
         table {
-            table-layout: fixed; /* Forces fixed-width column behavior */
-            width: 100%; /* Ensure the table spans its container fully */
+            table-layout: fixed;
+            width: 100%;
         }
 
-        /* Apply wrapping behavior to specific cells or columns */
         .text-wrap {
-            word-wrap: break-word; /* Forces text to break at words or boundaries */
-            word-break: break-word; /* Ensures unbroken text like URLs or long spans break too */
-            white-space: normal; /* Allows the text to wrap to new lines */
-            overflow-wrap: break-word; /* Alternative to force-breaking long strings */
-        }
-
-        /* Optional: Impose max height/width constraints to ensure visual balance */
-        .text-wrap {
-            max-width: 300px; /* Use a size comfortable for your layout */
-            overflow: hidden; /* Prevent overflow content visually spilling */
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            overflow-wrap: break-word;
+            max-width: 300px;
+            overflow: hidden;
         }
 
         th, td {
-            text-align: left; /* Ensure text aligns properly */
-            vertical-align: top; /* Text starts at the top of the cell */
+            text-align: left;
+            vertical-align: top;
         }
 
-        /* Body Styling */
         body {
             margin: 0;
             font-size: 14px;
@@ -43,12 +43,11 @@
             background-color: #f9f9f9;
         }
 
-        /* Navbar Styling */
         .navbar {
-            background-color: #ffffff; /* White background for a clean look */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            border-bottom: 1px solid #ddd; /* Add subtle border */
-            padding: 20px 15px; /* Increase the bar height */
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #ddd;
+            padding: 20px 15px;
             position: fixed;
             top: 0;
             left: 0;
@@ -56,32 +55,35 @@
             z-index: 1000;
         }
 
-        /* Navbar Brand */
         .navbar .navbar-brand {
-            font-size: 26px; /* Increase font size */
+            font-size: 26px;
             font-weight: bold;
-            color: #333; /* Dark gray for title text */
-            text-decoration: none; /* Remove underline */
-            cursor: pointer; /* Change cursor to pointer on hover */
+            color: #333;
+            text-decoration: none;
         }
 
-        .navbar-brand:hover {
+        .profile-section, .logout {
+            font-size: 14px;
         }
 
-        .navbar div {
-            margin-top: 5px; /* Globally pushes elements down */
+        .logout i {
+            margin-left: 5px;
+            font-size: 16px;
         }
 
-        .profile-section {
-            padding-top: 0px; /* Adjust value to move it further down */
+        .hamburger-icon {
+            font-size: 26px;
+            cursor: pointer;
+            position: relative;
+            top: -7.5px;
+            color: #333;
         }
 
-        /* Move logout button up */
-        .logout {
-            margin-top: -1.99px; /* Adjust value to move it further up */
+        .hamburger-icon:hover {
+            background-color: rgba(211, 211, 211, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Dropdown Menu Styling */
         .dropdown-menu {
             position: absolute;
             top: 60px;
@@ -98,24 +100,23 @@
         .dropdown-menu a {
             display: flex;
             align-items: center;
-            padding: 8px 10px; /* Reduce overall padding */
+            padding: 8px 10px;
             font-size: 14px;
-            color: #333;
             text-decoration: none;
             transition: background-color 0.2s ease;
+            color: black;
         }
 
         .dropdown-menu a i {
-            margin-left: 4px; /* Small gap between text and icon */
+            margin-left: 4px;
         }
 
         .dropdown-menu a:hover {
             background-color: #f5f5f5;
         }
 
-        /* Main Content */
         .main-content {
-            margin-top: 80px; /* Adjust for bigger navbar */
+            margin-top: 80px;
             padding: 20px;
         }
 
@@ -124,6 +125,11 @@
             font-size: 14px;
             text-decoration: none;
             color: #555;
+            margin-top: -1.9px; /* Add this to shift the Logout button upwards */
+        }
+
+        .profile-section {
+            margin-top: 0px; /* Add this to shift the profile section downwards */
         }
 
         .logout i {
@@ -153,21 +159,20 @@
                 font-size: 18px;
             }
         }
+
+
     </style>
 </head>
 <body>
 <!-- Navbar -->
 <nav class="navbar d-flex align-items-center justify-content-between">
-    <!-- Left side: Hamburger icon and Portal Title -->
     <div>
         <span id="hamburgerIcon" class="hamburger-icon">☰</span>
         <a href="{% url 'dashboard' %}" class="navbar-brand ms-3">
             Inventory Portal <i class="bi bi-box"></i>
         </a>
     </div>
-
     <div class="d-flex align-items-center">
-        <!-- Profile Icon and Username -->
         <span class="profile-section d-flex align-items-center me-4">
             <i class="bi bi-person-circle me-1" style="font-size: 1.2rem;"></i>
             {{ request.user.username }}
@@ -180,7 +185,7 @@
     </div>
 </nav>
 
-<!-- Custom Dropdown Menu -->
+<!-- Dropdown Menu -->
 <div id="dropdownMenu" class="dropdown-menu">
     <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         View Requests <i class="fas fa-list"></i>
@@ -201,11 +206,10 @@
     {% endblock %}
 </div>
 
-<!-- Optional Bootstrap Icons -->
+<!-- Bootstrap Bundle with Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-<!-- JavaScript to Toggle Dropdown Menu -->
+<!-- Custom JavaScript -->
 <script>
     const hamburgerIcon = document.getElementById('hamburgerIcon');
     const dropdownMenu = document.getElementById('dropdownMenu');
