@@ -1,11 +1,11 @@
-from pyexpat.errors import messages
 from urllib.request import Request
 
 from django.contrib import messages
 
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.urls import reverse_lazy
@@ -14,6 +14,35 @@ from django.views.generic import DeleteView
 from .models import InventoryItem, InventoryRequest
 from .forms import RequestForm, AdminRequestForm
 
+def register(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+
+        # Check if passwords match
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('register')
+
+        # Check if username or email already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken.")
+            return redirect('register')
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email is already registered.")
+            return redirect('register')
+
+        # Create user and log them in
+        user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
+        messages.success(request, "Account created successfully!")
+        login(request, user)
+        return redirect('dashboard')
+
+    return render(request, 'registration/register.html')
 
 @login_required
 def dashboard(request):
@@ -23,7 +52,9 @@ def dashboard(request):
         is_admin = True
     else:
         requests = InventoryRequest.objects.filter(requested_by=request.user)
-        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'Rejected']).count()
+        current_requests_count = InventoryRequest.objects.filter(
+            requested_by=request.user
+        ).exclude(status__in=['Approved', 'Rejected']).count()
         is_admin = False
 
     # Get available inventories

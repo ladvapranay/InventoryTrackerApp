@@ -7,8 +7,12 @@ from inventory import views
 urlpatterns = [
     path('admin/', admin.site.urls),  # Admin portal
     path('', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),  # Login
+
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),  # /login/
+    path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),  # Dashboard
     path('logout/', views.logout_view, name='logout'),  # Logout
+
     path('available-inventory/', views.available_inventory, name='available_inventory'),  # View inventory
     path('create-request/', views.create_request, name='create_request'),  # Create request
     path('delete-request/<int:request_id>/', views.delete_request, name='delete_request'),

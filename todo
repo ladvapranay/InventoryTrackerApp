@@ -1,10 +1,2 @@
-- Reject button for admin
-- If rejected - provide user with reason
 - Create a tests file
-- Shift login downwards.
-- Add username (user), Assignee (admin) and date requested to the table
-- Popup to say this incident will be assigend to you r dashboarf
-- SOrt out the Pop up when oyu delete or edit
-- Add register page
-
-- Archived requests
+- avaiable inventory view
