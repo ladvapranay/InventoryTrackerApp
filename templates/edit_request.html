@@ -12,7 +12,7 @@
                 <select id="status" name="status" class="form-control">
                     <option value="New" {% if inventory_request.status == 'New' %}selected{% endif %}>New</option>
                     <option value="In Progress" {% if inventory_request.status == 'In Progress' %}selected{% endif %}>In Progress</option>
-                    <option value="Approved" {% if inventory_request.status == 'Approved' %}selected{% endif %}>Completed</option>
+                    <option value="Approved" {% if inventory_request.status == 'Approved' %}selected{% endif %}>Approved</option>
                     <option value="Rejected" {% if inventory_request.status == 'Rejected' %}selected{% endif %}>Rejected</option>
                 </select>
             </div>

@@ -3,8 +3,62 @@
 {% block title %}Dashboard | Inventory Portal{% endblock %}
 
 {% block content %}
+
+    <style>
+        /* Priority Highlights */
+        .priority-low {
+            background-color: #d4edda; /* Light yellow */
+            color: #000000; /* Dark yellow */
+            padding: 4px 8px; /* Add subtle padding */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        .priority-medium {
+            background-color: #fff3cd; /* Light blue */
+            color: #000000; /* Dark blue */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .priority-high {
+            background-color: #efb1b1; /* Light red */
+            color: #000000; /* Dark red */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Status Highlights */
+        .status-new {
+            background-color: #fff3cd; /* Light green */
+            color: #000000; /* Dark green */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-in-progress {
+            background-color: #cce5ff; /* Light blue */
+            color: #000000; /* Dark blue */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-approved {
+            background-color: #d4edda; /* Light blue */
+            color: #000000; /* Dark blue */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .status-rejected {
+            background-color: #efb1b1; /* Light red */
+            color: #000000; /* Dark red */
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+    </style>
     <div class="container-fluid mt-5">
-        <h2 class="mb-4">Welcome to your Inventory Dashboard!</h2>
+        <h1 class="text-center" style="margin-top: 15px;">Welcome {{ user.username|title }} to Itemize!</h1>
+        <h2 class="mb-4">Your Inventory Dashboard:</h2>
 
         <table class="table table-striped">
             <thead>
@@ -14,6 +68,7 @@
                 <th>Reason</th>
                 <th>Priority</th>
                 <th>Status</th>
+                <th>Date Created</th>
                 <th>Requested By</th>
                 {% if is_admin %}
                     <th>Actions</th>
@@ -26,8 +81,26 @@
                     <td>{{ req.id }}</td>
                     <td>{{ req.item.name }}</td>
                     <td>{{ req.reason }}</td>
-                    <td>{{ req.priority }}</td>
-                    <td>{{ req.status }}</td>
+                    <td>
+                <span class="{% if req.priority == 'Low' %}priority-low
+                              {% elif req.priority == 'Medium' %}priority-medium
+                              {% elif req.priority == 'High' %}priority-high{% endif %}">
+                    {{ req.priority }}
+                </span>
+                    </td>
+
+                    <!-- Highlight Status -->
+                    <td>
+                <span class="{% if req.status == 'New' %}status-new
+                              {% elif req.status == 'In Progress' %}status-in-progress
+                              {% elif req.status == 'Approved' %}status-approved
+                              {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
+                    {{ req.status }}
+                </span>
+                    </td>
+
+                    <td>{{ req.created_at|date:"d/m/Y" }}</td>
+
                     <td>{{ req.requested_by.username }}</td>
                     {% if is_admin %}
                         <td>
@@ -44,28 +117,40 @@
             </tbody>
         </table>
 
-        <div class="row mt-4">
+        <div class="row mb-4">
             <!-- Current Requests Box -->
             <div class="col-md-6">
-                <div class="info-box current-requests p-4 text-white text-center rounded shadow-sm">
-                    <h4>Current Requests</h4>
-                    <h1>{{ current_requests_count }}</h1>
-                    <a href="{% url 'create_request' %}" class="btn btn-light mt-3">Create a New Request</a>
+                <div class="card text-white bg-success h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Current Requests</h5>
+                    </div>
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        <h1>{{ current_requests_count }}</h1>
+                        <p class="card-text">Ongoing requests</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'create_request' %}" class="btn btn-outline-light btn-sm">Create a New
+                            Request</a>
+                    </div>
                 </div>
             </div>
 
-            <!-- Available Inventory Box -->
             <div class="col-md-6">
-                <div class="info-box available-inventory p-4 text-white text-center rounded shadow-sm">
-                    <h4>Available Inventory</h4>
-                    <ul class="list-unstyled mb-4">
-                        {% for item in available_inventories|slice:":3" %}
+                <div class="card text-white bg-primary h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Available Inventory</h5>
+                    </div>
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                        <span>{% for item in available_inventories|slice:":3" %}
                             <li>{{ item.name }}</li>
                         {% empty %}
-                            <li>No inventory available</li>
-                        {% endfor %}
-                    </ul>
-                    <a href="{% url 'available_inventory' %}" class="btn btn-light">View Available Inventory</a>
+                            <span>No inventory available</span>
+                        {% endfor %}</span>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'available_inventory' %}" class="btn btn-outline-light btn-sm">Click to view all
+                            available items</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,3 +159,4 @@
 
 {% block script %}
 {% endblock %}
+

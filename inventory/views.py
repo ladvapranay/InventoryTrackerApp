@@ -19,23 +19,26 @@ from .forms import RequestForm, AdminRequestForm
 def dashboard(request):
     if request.user.is_staff:
         requests = InventoryRequest.objects.all()
-        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'rejected']).count()
+        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'Rejected']).count()
         is_admin = True
     else:
         requests = InventoryRequest.objects.filter(requested_by=request.user)
-        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'rejected']).count()
+        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'Rejected']).count()
         is_admin = False
 
     # Get available inventories
     available_inventories = InventoryItem.objects.all()[:3]
 
+    # Pass all the required context variables
     context = {
         'requests': requests,
-        'current_requests_count': current_requests_count,
-        'available_inventories': available_inventories,
-        'is_admin': is_admin,
+        'current_requests_count': current_requests_count,  # Add this
+        'available_inventories': available_inventories,  # Add this
+        'is_admin': is_admin,  # Already present
+        'user_name': request.user.username if request.user.is_authenticated else "Guest"
     }
-    return render(request, 'dashboard.html', {'requests': requests, 'is_admin': is_admin})
+
+    return render(request, 'dashboard.html', context)
 
 
 @login_required

@@ -1,10 +1,10 @@
 - Reject button for admin
 - If rejected - provide user with reason
-- admin or user should show a profile icon top right as signed in: replace logout the profile
 - Create a tests file
 - Shift login downwards.
 - Add username (user), Assignee (admin) and date requested to the table
-- Does not work when I submit a different type of item request: Once the item request is created it should navigate straight to the view requests dashboard
-- Add Date created to the column
-- Two squares below dashbaord - One of avable invenotry and one of create requests
 - Popup to say this incident will be assigend to you r dashboarf
+- SOrt out the Pop up when oyu delete or edit
+- Add register page
+
+- Archived requests
