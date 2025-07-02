@@ -57,101 +57,119 @@
         }
     </style>
     <div class="container-fluid mt-5">
-        <h1 class="text-center" style="margin-top: 15px;">Welcome <strong>{{ user.username|title }}</strong> to Itemize!</h1>
-        <h2 class="mb-4">Your Inventory Dashboard:</h2>
+    <h1 class="text-center" style="margin-top: 15px;">Welcome <strong>{{ user.username|title }}</strong> to Itemize!
+    </h1>
+    <h2 class="mb-4">Your Inventory Dashboard:</h2>
 
-        <table class="table table-striped">
-            <thead>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Request ID</th>
+            <th>Item</th>
+            <th>Reason</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date Created</th>
+            <th>Requested By</th>
+            {% if is_admin %}
+                <th>Actions</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for req in requests %}
             <tr>
-                <th>Request ID</th>
-                <th>Item</th>
-                <th>Reason</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Date Created</th>
-                <th>Requested By</th>
-                {% if is_admin %}
-                    <th>Actions</th>
-                {% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for req in requests %}
-                <tr>
-                    <td>{{ req.id }}</td>
-                    <td>{{ req.item.name }}</td>
-                    <td>{{ req.reason }}</td>
-                    <td>
+                <td>{{ req.id }}</td>
+                <td>{{ req.item.name }}</td>
+                <td>{{ req.reason }}</td>
+                <td>
                 <span class="{% if req.priority == 'Low' %}priority-low
                               {% elif req.priority == 'Medium' %}priority-medium
                               {% elif req.priority == 'High' %}priority-high{% endif %}">
                     {{ req.priority }}
                 </span>
-                    </td>
+                </td>
 
-                    <!-- Highlight Status -->
-                    <td>
+                <!-- Highlight Status -->
+                <td>
                 <span class="{% if req.status == 'New' %}status-new
                               {% elif req.status == 'In Progress' %}status-in-progress
                               {% elif req.status == 'Approved' %}status-approved
                               {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
                     {{ req.status }}
                 </span>
+                </td>
+
+                <td>{{ req.created_at|date:"d/m/Y" }}</td>
+
+                <td>{{ req.requested_by.username }}</td>
+                {% if is_admin %}
+                    <td>
+                        <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No requests found.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-                    <td>{{ req.created_at|date:"d/m/Y" }}</td>
-
-                    <td>{{ req.requested_by.username }}</td>
-                    {% if is_admin %}
-                        <td>
-                            <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm">Edit</a>
-                            <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm">Delete</a>
-                        </td>
-                    {% endif %}
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center">No requests found.</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="row mb-4">
-            <!-- Current Requests Box -->
-            <div class="col-md-6">
-                <div class="card text-white bg-success h-100">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Current Requests</h5>
-                    </div>
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <h1>{{ current_requests_count }}</h1>
-                        <p class="card-text">Ongoing requests</p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'create_request' %}" class="btn btn-outline-light btn-sm">Create a New
-                            Request</a>
-                    </div>
-                </div>
+    <div class="row mb-4">
+    <!-- Current Requests Box -->
+    <div class="col-md-6">
+        <div class="card text-white bg-success h-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Current Requests</h5>
             </div>
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                <h1>{{ current_requests_count }}</h1>
+                <p class="card-text">Ongoing requests</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'create_request' %}" class="btn btn-outline-light btn-sm">Create a New
+                    Request</a>
+            </div>
+        </div>
+    </div>
 
-            <div class="col-md-6">
-                <div class="card text-white bg-primary h-100">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Available Inventory</h5>
-                    </div>
-                    <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                        <span>{% for item in available_inventories|slice:":3" %}
-                            <li>{{ item.name }}</li>
-                        {% empty %}
-                            <span>No inventory available</span>
-                        {% endfor %}</span>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'available_inventory' %}" class="btn btn-outline-light btn-sm">Click to view all
-                            available items</a>
-                    </div>
-                </div>
+    <div class="col-md-6">
+        <div class="card"
+             style="background-color: #007bff; border: 1px solid #007bff; border-radius: 8px; overflow: hidden;">
+            <div class="card-header"
+                 style="background-color: #007bff; color: white; ">
+                <h5 style="margin: 0;">Available Inventory</h5>
+            </div>
+            <div class="card-body" style="padding: 10px;">
+                {% if available_inventories|length > 0 %}
+                    <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 5px; overflow: hidden;">
+                        <thead>
+                        <tr>
+                            <th style="text-align: left; padding: 5px; border-bottom: 2px solid black;">Item Name</th>
+                            <th style="text-align: left; padding: 5px; border-bottom: 2px solid black;">Quantity</th>
+                            <th style="text-align: left; padding: 5px; border-bottom: 2px solid black;">Location</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in available_inventories|slice:":3" %}
+                            <tr>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.name }}</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.quantity }}</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.location }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p style="text-align: center; color: white; margin: 10px 0;">No inventory available</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'available_inventory' %}" class="btn btn-outline-light btn-sm">Click to view all
+                    available items</a>
             </div>
         </div>
     </div>
