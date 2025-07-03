@@ -26,10 +26,10 @@ class InventoryRequest(models.Model):
         ('Rejected', 'Rejected'),
     ]
 
-    item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)  # Link to InventoryItem
+    item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
     reason = models.TextField()
     priority = models.CharField(max_length=10, choices=[('High', 'High'), ('Medium', 'Medium'), ('Low', 'Low')])
-    requested_by = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to User
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='New')
     created_at = models.DateTimeField(auto_now_add=True)
 

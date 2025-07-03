@@ -26,14 +26,13 @@ class EditRequestTestCase(TestCase):
             {'status': 'Approved'}
         )
 
-        self.assertEqual(response.status_code, 302)  # Check for redirect
-        self.assertRedirects(response, reverse('admin_dashboard'))  # Verify redirect to admin dashboard
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('admin_dashboard'))
 
         updated_request = InventoryRequest.objects.get(id=self.inventory_request.id)
-        self.assertEqual(updated_request.status, 'Approved')  # Ensure data is updated correctly
+        self.assertEqual(updated_request.status, 'Approved')
 
     def test_edit_request_as_non_admin(self):
-        # Log in as a non-admin user
         self.client.login(username='testuser', password='password123')
 
         response = self.client.post(
@@ -41,5 +40,4 @@ class EditRequestTestCase(TestCase):
             {'status': 'Approved'}
         )
 
-        # Assert that access is forbidden
-        self.assertEqual(response.status_code, 403)  # Non-admins shouldn't be allowed to edit requests
+        self.assertEqual(response.status_code, 403)

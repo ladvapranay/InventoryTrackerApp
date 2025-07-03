@@ -18,5 +18,4 @@ class InventoryItemAdmin(admin.ModelAdmin):
 
     list_editable = ('quantity', 'location')
 
-    # Show 20 items per page
     list_per_page = 20

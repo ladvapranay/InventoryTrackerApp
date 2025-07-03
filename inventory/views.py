@@ -96,10 +96,6 @@ from django.http import HttpResponseBadRequest
 
 @login_required
 def create_request(request):
-    """
-    Allow users to create new inventory requests with a free text field or dropdown for items.
-    """
-
     item_id = request.GET.get('item_id')
     prefilled_item = None
     if item_id:
