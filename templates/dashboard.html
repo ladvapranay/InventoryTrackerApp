@@ -5,6 +5,36 @@
 {% block content %}
 
     <style>
+
+        .btn-icon {
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn-icon .hover-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            color: #000;
+            background-color: #f2f2f2;
+            border: 1px solid #ddd;
+            padding: 3px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            transform: translateX(-50%);
+            top: 110%; /* Position below the button */
+            left: 50%; /* Center align horizontally */
+            z-index: 10;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .btn-icon:hover .hover-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .priority-low {
             background-color: #d4edda;
             color: #000000;
@@ -56,7 +86,8 @@
     </style>
 
     <div class="container-fluid mt-5">
-    <h1 class="text-center" style="margin-top: 5px; margin-bottom: 15px">Welcome <strong>{{ user.username|title }}</strong> to Itemize!
+    <h1 class="text-center" style="margin-top: 5px; margin-bottom: 15px">Welcome
+        <strong>{{ user.username|title }}</strong> to Itemize!
     </h1>
 
     <table class="table table-striped">
@@ -81,35 +112,48 @@
                 <td>{{ req.item.name }}</td>
                 <td>{{ req.reason }}</td>
                 <td>
-                <span class="{% if req.priority == 'Low' %}priority-low
-                              {% elif req.priority == 'Medium' %}priority-medium
-                              {% elif req.priority == 'High' %}priority-high{% endif %}">
-                    {{ req.priority }}
-                </span>
+            <span class="{% if req.priority == 'Low' %}priority-low
+                          {% elif req.priority == 'Medium' %}priority-medium
+                          {% elif req.priority == 'High' %}priority-high{% endif %}">
+                {{ req.priority }}
+            </span>
                 </td>
 
                 <td>
-                <span class="{% if req.status == 'New' %}status-new
-                              {% elif req.status == 'In Progress' %}status-in-progress
-                              {% elif req.status == 'Approved' %}status-approved
-                              {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
-                    {{ req.status }}
-                </span>
+            <span class="{% if req.status == 'New' %}status-new
+                          {% elif req.status == 'In Progress' %}status-in-progress
+                          {% elif req.status == 'Approved' %}status-approved
+                          {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
+                {{ req.status }}
+            </span>
                 </td>
 
                 <td>{{ req.created_at|date:"d/m/Y" }}</td>
 
-                <td>{{ req.requested_by.username }}</td>
+                <!-- Updated Section: Requested By -->
+                <td>
+                    <!-- Different icon for admin vs normal user -->
+                    {% if req.requested_by.is_superuser %}
+                        <i class="fa fa-user-shield" style="color: #ff5733; margin-right: 5px;"></i>
+                    {% else %}
+                        <i class="fa fa-user" style="color: #007bff; margin-right: 5px;"></i>
+                    {% endif %}
+                    {{ req.requested_by.username }}
+                </td>
+
+                <!-- Actions (shown if admin) -->
                 {% if is_admin %}
                     <td>
-                        <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm btn-icon">
+                            <i class="fa fa-pencil-alt"></i>
+                            <span class="hover-text">Edit</span>
+                        </a>
+                        <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm btn-icon">
+                            <i class="fa fa-trash"></i>
+                            <span class="hover-text">Delete</span>
+                        </a>
                     </td>
                 {% endif %}
-            </tr>
-        {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">No requests found.</td>
             </tr>
         {% endfor %}
         </tbody>
