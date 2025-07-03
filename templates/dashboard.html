@@ -5,61 +5,59 @@
 {% block content %}
 
     <style>
-        /* Priority Highlights */
         .priority-low {
-            background-color: #d4edda; /* Light yellow */
-            color: #000000; /* Dark yellow */
-            padding: 4px 8px; /* Add subtle padding */
-            border-radius: 4px; /* Rounded corners */
+            background-color: #d4edda;
+            color: #000000;
+            padding: 4px 8px;
+            border-radius: 4px;
         }
 
         .priority-medium {
-            background-color: #fff3cd; /* Light blue */
-            color: #000000; /* Dark blue */
+            background-color: #fff3cd;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
 
         .priority-high {
-            background-color: #efb1b1; /* Light red */
-            color: #000000; /* Dark red */
+            background-color: #efb1b1;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
 
-        /* Status Highlights */
         .status-new {
-            background-color: #fff3cd; /* Light green */
-            color: #000000; /* Dark green */
+            background-color: #fff3cd;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
 
         .status-in-progress {
-            background-color: #cce5ff; /* Light blue */
-            color: #000000; /* Dark blue */
+            background-color: #cce5ff;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
 
         .status-approved {
-            background-color: #d4edda; /* Light blue */
-            color: #000000; /* Dark blue */
+            background-color: #d4edda;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
 
         .status-rejected {
-            background-color: #efb1b1; /* Light red */
-            color: #000000; /* Dark red */
+            background-color: #efb1b1;
+            color: #000000;
             padding: 4px 8px;
             border-radius: 4px;
         }
     </style>
+
     <div class="container-fluid mt-5">
-    <h1 class="text-center" style="margin-top: 15px;">Welcome <strong>{{ user.username|title }}</strong> to Itemize!
+    <h1 class="text-center" style="margin-top: 5px; margin-bottom: 15px">Welcome <strong>{{ user.username|title }}</strong> to Itemize!
     </h1>
-    <h2 class="mb-4">Your Inventory Dashboard:</h2>
 
     <table class="table table-striped">
         <thead>
@@ -90,7 +88,6 @@
                 </span>
                 </td>
 
-                <!-- Highlight Status -->
                 <td>
                 <span class="{% if req.status == 'New' %}status-new
                               {% elif req.status == 'In Progress' %}status-in-progress
@@ -119,34 +116,38 @@
     </table>
 
     <div class="row mb-4">
-    <!-- Current Requests Box -->
+
     <div class="col-md-6">
-        <div class="card text-white bg-success h-100">
-            <div class="card-header">
+        <div class="card h-100"
+             style="background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
+            <div class="card-header" style="background-color: #f2f2f2; color: black; border-bottom: 1px solid #ccc;">
                 <h5 class="card-title mb-0">Current Requests</h5>
             </div>
-            <div class="card-body d-flex flex-column align-items-center justify-content-center">
-                <h1>{{ current_requests_count }}</h1>
-                <p class="card-text">Ongoing requests</p>
+            <div class="card-body d-flex flex-column align-items-center justify-content-center"
+                 style="background-color: white;">
+                <h1 style="color: black;">{{ current_requests_count }}</h1>
+                <p class="card-text" style="color: black;">Ongoing requests</p>
             </div>
-            <div class="card-footer">
-                <a href="{% url 'create_request' %}" class="btn btn-outline-light btn-sm">Create a New
+            <div class="card-footer" style="background-color: #f2f2f2; border-top: 1px solid #ccc;">
+                <a href="{% url 'create_request' %}" class="btn btn-sm"
+                   style="border: 1px solid black; color: black; background-color: transparent; transition: 0.3s;"
+                   onmouseover="this.style.backgroundColor='black'; this.style.color='white';"
+                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';">Create a New
                     Request</a>
             </div>
         </div>
     </div>
 
     <div class="col-md-6">
-        <div class="card"
-             style="background-color: #007bff; border: 1px solid #007bff; border-radius: 8px; overflow: hidden;">
-            <div class="card-header"
-                 style="background-color: #007bff; color: white; ">
-                <h5 style="margin: 0;">Available Inventory</h5>
+        <div class="card h-100"
+             style="background-color: #f2f2f2; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
+            <div class="card-header" style="background-color: #f2f2f2; color: black; border-bottom: 1px solid #ccc;">
+                <h5 class="card-title mb-0">Available Inventory</h5>
             </div>
-            <div class="card-body" style="padding: 10px;">
+            <div class="card-body" style="background-color: white; padding: 10px;">
                 {% if available_inventories|length > 0 %}
-                    <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 5px; overflow: hidden;">
-                        <thead>
+                    <table style="width: 100%; border-collapse: collapse; background-color: white; border-radius: 5px; overflow: hidden; border: 1px solid #ddd;">
+                        <thead style="background-color: #f2f2f2;">
                         <tr>
                             <th style="text-align: left; padding: 5px; border-bottom: 2px solid black;">Item Name</th>
                             <th style="text-align: left; padding: 5px; border-bottom: 2px solid black;">Quantity</th>
@@ -156,19 +157,22 @@
                         <tbody>
                         {% for item in available_inventories|slice:":3" %}
                             <tr>
-                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.name }}</td>
-                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.quantity }}</td>
-                                <td style="padding: 5px; border-bottom: 1px solid #ddd;">{{ item.location }}</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd; color: black;">{{ item.name }}</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd; color: black;">{{ item.quantity }}</td>
+                                <td style="padding: 5px; border-bottom: 1px solid #ddd; color: black;">{{ item.location }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 {% else %}
-                    <p style="text-align: center; color: white; margin: 10px 0;">No inventory available</p>
+                    <p style="text-align: center; color: black; margin: 10px 0;">No inventory available</p>
                 {% endif %}
             </div>
-            <div class="card-footer">
-                <a href="{% url 'available_inventory' %}" class="btn btn-outline-light btn-sm">Click to view all
+            <div class="card-footer" style="background-color: #f2f2f2; border-top: 1px solid #ccc;">
+                <a href="{% url 'available_inventory' %}" class="btn btn-sm"
+                   style="border: 1px solid black; color: black; background-color: transparent; transition: 0.3s;"
+                   onmouseover="this.style.backgroundColor='black'; this.style.color='white';"
+                   onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';">Click to view all
                     available items</a>
             </div>
         </div>

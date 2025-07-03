@@ -8,10 +8,8 @@
         <form method="POST">
             {% csrf_token %}
 
-            <!-- Single Field: Dropdown + Custom Input -->
             <div class="mb-3">
                 <label for="id_item" class="form-label">Item Request <span class="text-danger">*</span></label>
-                <!-- Input Field Linked to Datalist -->
                 <input
                         type="text"
                         id="id_item"
@@ -22,7 +20,6 @@
                         value="{{ selected_item }}"
                 />
 
-                <!-- Datalist for Dropdown Options -->
                 <datalist id="available_items">
                     {% for item in inventory_items %}
                         <option value="{{ item.name }}"></option>
@@ -33,7 +30,6 @@
                 {% endif %}
             </div>
 
-            <!-- Reason Field -->
             <div class="mb-3">
                 <label for="id_reason" class="form-label">Reason <span class="text-danger">*</span></label>
                 {{ form.reason }}
@@ -42,7 +38,6 @@
                 {% endif %}
             </div>
 
-            <!-- Priority Field -->
             <div class="mb-3">
                 <label for="id_priority" class="form-label">Priority <span class="text-danger">*</span></label>
                 {{ form.priority }}
@@ -51,7 +46,6 @@
                 {% endif %}
             </div>
 
-            <!-- Form Submit Button -->
             <button type="submit" class="btn btn-primary">Submit Request</button>
             <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
         </form>

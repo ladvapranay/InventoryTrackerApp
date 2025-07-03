@@ -17,7 +17,6 @@ class InventoryItem(models.Model):
         verbose_name_plural = 'Inventory Items'
         db_table = 'inventory_item'
 
-    #Meta class lets you define things about you model such as DB name, singular name etc
 
 class InventoryRequest(models.Model):
     STATUS_CHOICES = [

@@ -19,7 +19,6 @@
             <td>{{ request.priority }}</td>
             <td>
                 {% if is_admin %}
-                    <!-- Admin-specific actions -->
                     <a href="{% url 'edit_request' request.id %}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{% url 'delete_request' request.id %}" method="POST" style="display:inline;">
                         {% csrf_token %}

@@ -32,7 +32,7 @@ class RequestForm(forms.ModelForm):
 class AdminRequestForm(forms.ModelForm):
     class Meta:
         model = InventoryRequest
-        fields = ['status']  # Admins can update only the status
+        fields = ['status']
         widgets = {
             'status': forms.Select(attrs={
                 'class': 'form-select',

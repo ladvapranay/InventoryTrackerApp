@@ -4,17 +4,15 @@
 
 {% block content %}
 <div class="container mt-5">
-    <!-- Toolbar Section -->
     <div class="toolbar d-flex justify-content-between align-items-center mb-4">
         <h2 class="m-0">Available Inventory</h2>
         <a href="{% url 'create_request' %}" class="btn btn-success">Create New Request</a>
     </div>
 
-    <!-- Content Section -->
     {% if items.count == 0 %}
         <p>No inventory items available at the moment.</p>
     {% else %}
-        <!-- Responsive Table -->
+
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
