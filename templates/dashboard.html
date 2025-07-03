@@ -130,9 +130,7 @@
 
                 <td>{{ req.created_at|date:"d/m/Y" }}</td>
 
-                <!-- Updated Section: Requested By -->
                 <td>
-                    <!-- Different icon for admin vs normal user -->
                     {% if req.requested_by.is_superuser %}
                         <i class="fa fa-user-shield" style="color: #ff5733; margin-right: 5px;"></i>
                     {% else %}
@@ -141,7 +139,6 @@
                     {{ req.requested_by.username }}
                 </td>
 
-                <!-- Actions (shown if admin) -->
                 {% if is_admin %}
                     <td>
                         <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm btn-icon">
