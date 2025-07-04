@@ -1,0 +1,36 @@
+erDiagram
+    USER ||--o{ INVENTORYREQUEST : "makes"
+    INVENTORYITEM ||--o{ INVENTORYREQUEST : "is requested"
+
+    USERGROUP {
+        int id
+        string name
+        string description
+    }
+
+    USER {
+        int id
+        string username
+        string email
+        string password
+    }
+
+    INVENTORYITEM {
+        int id
+        string name
+        string category
+        int quantity
+        string location
+        string description
+        datetime added
+    }
+
+    INVENTORYREQUEST {
+        int id
+        int item_id
+        int requested_by
+        string reason
+        enum priority
+        enum status
+        datetime created_at
+    }

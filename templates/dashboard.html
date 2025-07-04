@@ -137,9 +137,7 @@
                 <th>Status</th>
                 <th>Date Created</th>
                 <th>Requested By</th>
-                {% if is_admin %}
-                    <th>Actions</th>
-                {% endif %}
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -149,20 +147,20 @@
                     <td>{{ req.item.name }}</td>
                     <td>{{ req.reason }}</td>
                     <td>
-            <span class="{% if req.priority == 'Low' %}priority-low
-                          {% elif req.priority == 'Medium' %}priority-medium
-                          {% elif req.priority == 'High' %}priority-high{% endif %}">
-                {{ req.priority }}
-            </span>
+                <span class="{% if req.priority == 'Low' %}priority-low
+                              {% elif req.priority == 'Medium' %}priority-medium
+                              {% elif req.priority == 'High' %}priority-high{% endif %}">
+                    {{ req.priority }}
+                </span>
                     </td>
 
                     <td>
-            <span class="{% if req.status == 'New' %}status-new
-                          {% elif req.status == 'In Progress' %}status-in-progress
-                          {% elif req.status == 'Approved' %}status-approved
-                          {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
-                {{ req.status }}
-            </span>
+                <span class="{% if req.status == 'New' %}status-new
+                              {% elif req.status == 'In Progress' %}status-in-progress
+                              {% elif req.status == 'Approved' %}status-approved
+                              {% elif req.status == 'Rejected' %}status-rejected{% endif %}">
+                    {{ req.status }}
+                </span>
                     </td>
 
                     <td>{{ req.created_at|date:"d/m/Y" }}</td>
@@ -176,18 +174,22 @@
                         {{ req.requested_by.username }}
                     </td>
 
-                    {% if is_admin %}
-                        <td>
+                    <td>
+                        {% if req.requested_by == user or is_admin %}
                             <a href="{% url 'edit_request' req.id %}" class="btn btn-primary btn-sm btn-icon">
                                 <i class="fa fa-pencil-alt"></i>
                                 <span class="hover-text">Edit</span>
                             </a>
-                            <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm btn-icon">
-                                <i class="fa fa-trash"></i>
-                                <span class="hover-text">Delete</span>
-                            </a>
-                        </td>
-                    {% endif %}
+                            {% if is_admin %}
+                                <a href="{% url 'delete_request' req.id %}" class="btn btn-danger btn-sm btn-icon">
+                                    <i class="fa fa-trash"></i>
+                                    <span class="hover-text">Delete</span>
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">No Actions</span>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

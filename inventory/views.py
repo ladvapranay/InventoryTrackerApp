@@ -2,9 +2,11 @@ from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.http import HttpResponseBadRequest
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import InventoryItem, InventoryRequest
-from .forms import RequestForm
+from .forms import RequestForm, AdminRequestForm
+
 
 def register(request):
     if request.method == 'POST':
@@ -32,6 +34,7 @@ def register(request):
         return redirect('dashboard')
 
     return render(request, 'registration/register.html')
+
 
 @login_required
 def dashboard(request):
@@ -77,21 +80,34 @@ def delete_request(request, request_id):
 
 @login_required
 def edit_request(request, request_id):
-    if request.user.is_staff:
-        inventory_request = get_object_or_404(InventoryRequest, id=request_id)
-        if request.method == 'POST':
-            new_status = request.POST.get('status')
-            if new_status and new_status in ['New', 'In Progress', 'Approved', 'Rejected']:
-                inventory_request.status = new_status
-                inventory_request.save()
-                messages.success(request, f"Request {request_id} updated to {new_status}.")
-                return redirect('dashboard')
-            messages.error(request, "Invalid or missing status!")
-        return render(request, 'edit_request.html', {'inventory_request': inventory_request})
-    return HttpResponseBadRequest("You are not authorized to edit this request.")
+    inventory_request = get_object_or_404(InventoryRequest, id=request_id)
 
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseBadRequest
+    if inventory_request.requested_by != request.user and not request.user.is_staff:
+        return HttpResponseBadRequest("You are not authorized to edit this request.")
+
+    if request.method == 'POST':
+        if request.user.is_staff:
+            form = AdminRequestForm(request.POST, instance=inventory_request)
+        else:
+            form = RequestForm(request.POST, instance=inventory_request)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Request {inventory_request.id} updated successfully.")
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Failed to update the request. Please correct the errors.")
+
+    else:
+        if request.user.is_staff:
+            form = AdminRequestForm(instance=inventory_request)
+        else:
+            form = RequestForm(instance=inventory_request)
+
+    return render(request, 'edit_request.html', {
+        'form': form,
+        'inventory_request': inventory_request,
+    })
 
 
 @login_required
@@ -129,7 +145,6 @@ def create_request(request):
             return redirect('dashboard')
         else:
             print("Form errors:", form.errors)
-
 
     form = RequestForm(initial={'item': prefilled_item})
     return render(request, 'create_request.html', {
