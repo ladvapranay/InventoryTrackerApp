@@ -45,13 +45,15 @@ class RequestForm(forms.ModelForm):
         forbidden_strings = [
             "<script",
             "</script>",
-            "javascript:"
+            "javascript:",
+            "onerror=",
+            "onload="
         ]
 
         for value in forbidden_strings:
             if value.lower() in reason.lower():
                 raise forms.ValidationError(
-                    "Invalid characters detected."
+                    "Potential XSS attack detected. Please remove invalid characters."
                 )
 
         return reason
