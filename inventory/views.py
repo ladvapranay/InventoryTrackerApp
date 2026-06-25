@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import InventoryItem, InventoryRequest
 from .forms import RequestForm, AdminRequestForm
 from django.core.paginator import Paginator
 from django.db.models import Q
+
 
 def register(request):
     if request.method == 'POST':
@@ -97,18 +98,17 @@ def dashboard(request):
 
 @login_required
 def delete_request(request, request_id):
-    if request.user.is_staff:
-        try:
-            inventory_request = InventoryRequest.objects.get(id=request_id)
-        except InventoryRequest.DoesNotExist:
-            messages.error(request, f"Request with ID {request_id} does not exist.")
-            return redirect('dashboard')
-        if request.method == 'POST':
-            inventory_request.delete()
-            messages.success(request, f"Request {request_id} has been deleted successfully.")
-            return redirect('dashboard')
-        return render(request, 'delete_request.html', {'request_id': request_id})
-    return HttpResponseBadRequest("You are not authorized to delete this request.")
+    if not request.user.is_staff:
+        return HttpResponseForbidden("You are not authorized to delete this request.")
+
+    inventory_request = get_object_or_404(InventoryRequest, id=request_id)
+
+    if request.method == 'POST':
+        inventory_request.delete()
+        messages.success(request, f"Request {request_id} has been deleted successfully.")
+        return redirect('dashboard')
+
+    return render(request, 'delete_request.html', {'request_id': request_id})
 
 
 @login_required
@@ -116,32 +116,24 @@ def edit_request(request, request_id):
     inventory_request = get_object_or_404(InventoryRequest, id=request_id)
 
     if inventory_request.requested_by != request.user and not request.user.is_staff:
-        return HttpResponseBadRequest("You are not authorized to edit this request.")
+        return HttpResponseForbidden("You are not authorized to edit this request.")
 
     if request.method == 'POST':
-        if request.user.is_staff:
-            form = AdminRequestForm(request.POST, instance=inventory_request)
-        else:
-            form = RequestForm(request.POST, instance=inventory_request)
+        form = AdminRequestForm(request.POST, instance=inventory_request) if request.user.is_staff else RequestForm(request.POST, instance=inventory_request)
 
         if form.is_valid():
             form.save()
             messages.success(request, f"Request {inventory_request.id} updated successfully.")
             return redirect('dashboard')
-        else:
-            messages.error(request, "Failed to update the request. Please correct the errors.")
 
+        messages.error(request, "Failed to update the request. Please correct the errors.")
     else:
-        if request.user.is_staff:
-            form = AdminRequestForm(instance=inventory_request)
-        else:
-            form = RequestForm(instance=inventory_request)
+        form = AdminRequestForm(instance=inventory_request) if request.user.is_staff else RequestForm(instance=inventory_request)
 
     return render(request, 'edit_request.html', {
         'form': form,
         'inventory_request': inventory_request,
     })
-
 
 @login_required
 def create_request(request):
