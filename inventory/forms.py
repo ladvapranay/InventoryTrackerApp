@@ -7,10 +7,6 @@ class RequestForm(forms.ModelForm):
         model = InventoryRequest
         fields = ['item', 'reason', 'priority']
         widgets = {
-            'item': forms.Select(attrs={
-                'class': 'form-select',
-                'required': 'required',
-            }),
             'reason': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter your reason for the request',
@@ -23,37 +19,31 @@ class RequestForm(forms.ModelForm):
             }),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.required = True
-
-    # Server-side validation
     def clean_reason(self):
         reason = self.cleaned_data.get('reason', '').strip()
 
         if len(reason) < 10:
-            raise forms.ValidationError(
-                "Reason must be at least 10 characters long."
-            )
-
+            raise forms.ValidationError("Reason must be at least 10 characters long."
+        )
         if len(reason) > 500:
             raise forms.ValidationError(
-                "Reason cannot exceed 500 characters."
-            )
-
+            "Reason cannot exceed 500 characters."
+        )
         forbidden_strings = [
             "<script",
             "</script>",
             "javascript:",
             "onerror=",
-            "onload="
-        ]
+            "onload=",
+            "<iframe",
+            "</iframe>"
 
-        for value in forbidden_strings:
-            if value.lower() in reason.lower():
+        ]
+        reason_lower = reason.lower()
+        for forbidden in forbidden_strings:
+            if forbidden in reason_lower:
                 raise forms.ValidationError(
-                    "Potential XSS attack detected. Please remove invalid characters."
+                    "Potential XSS attack detected."
                 )
 
         return reason

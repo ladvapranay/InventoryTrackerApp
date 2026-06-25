@@ -151,6 +151,7 @@ def edit_request(request, request_id):
 def create_request(request):
     item_id = request.GET.get('item_id')
     prefilled_item = None
+
     if item_id:
         try:
             prefilled_item = InventoryItem.objects.get(id=item_id)
@@ -159,7 +160,6 @@ def create_request(request):
 
     if request.method == 'POST':
         post_data = request.POST.copy()
-
         submitted_item_name = post_data.get('item')
         try:
             matching_item = InventoryItem.objects.get(name__iexact=submitted_item_name)
@@ -167,26 +167,40 @@ def create_request(request):
         except InventoryItem.DoesNotExist:
             form = RequestForm(request.POST)
             form.add_error('item', "The selected item does not exist. Please pick a valid option.")
+
+            messages.error(request, "The selected item does not exist. Please pick a valid option.")
+
             return render(request, 'create_request.html', {
                 'form': form,
-                'inventory_items': InventoryItem.objects.all()
+                'inventory_items': InventoryItem.objects.all(),
+                'selected_item': submitted_item_name
             })
 
         form = RequestForm(post_data)
+
         if form.is_valid():
             inventory_request = form.save(commit=False)
             inventory_request.requested_by = request.user
             inventory_request.status = 'New'
             inventory_request.save()
 
+            messages.success(request, "Request created successfully.")
             return redirect('dashboard')
-        else:
-            print("Form errors:", form.errors)
+
+        messages.error(request, "Please correct the errors below.")
+
+        return render(request, 'create_request.html', {
+            'form': form,
+            'inventory_items': InventoryItem.objects.all(),
+            'selected_item': submitted_item_name
+        })
 
     form = RequestForm(initial={'item': prefilled_item})
+
     return render(request, 'create_request.html', {
         'form': form,
-        'inventory_items': InventoryItem.objects.all()
+        'inventory_items': InventoryItem.objects.all(),
+        'selected_item': prefilled_item.name if prefilled_item else ''
     })
 
 

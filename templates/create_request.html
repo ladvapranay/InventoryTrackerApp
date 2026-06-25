@@ -3,51 +3,77 @@
 {% block title %}Create Request{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <h2>Create Request</h2>
-        <form method="POST">
-            {% csrf_token %}
+<div class="container mt-5">
+    <h2>Create Request</h2>
 
-            <div class="mb-3">
-                <label for="id_item" class="form-label">Item Request <span class="text-danger">*</span></label>
-                <input
-                        type="text"
-                        id="id_item"
-                        name="item"
-                        class="form-control"
-                        list="available_items"
-                        placeholder="Select or type an item..."
-                        value="{{ selected_item }}"
-                />
+    <form method="POST">
+        {% csrf_token %}
 
-                <datalist id="available_items">
-                    {% for item in inventory_items %}
-                        <option value="{{ item.name }}"></option>
-                    {% endfor %}
-                </datalist>
-                {% if form.item.errors %}
-                    <small class="text-danger">{{ form.item.errors|striptags }}</small>
-                {% endif %}
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Please correct the errors below.
             </div>
+        {% endif %}
 
-            <div class="mb-3">
-                <label for="id_reason" class="form-label">Reason <span class="text-danger">*</span></label>
-                {{ form.reason }}
-                {% if form.reason.errors %}
-                    <small class="text-danger">{{ form.reason.errors|striptags }}</small>
-                {% endif %}
-            </div>
+        <div class="mb-3">
+            <label for="id_item" class="form-label">
+                Item Request <span class="text-danger">*</span>
+            </label>
 
-            <div class="mb-3">
-                <label for="id_priority" class="form-label">Priority <span class="text-danger">*</span></label>
-                {{ form.priority }}
-                {% if form.priority.errors %}
-                    <small class="text-danger">{{ form.priority.errors|striptags }}</small>
-                {% endif %}
-            </div>
+            <input
+                type="text"
+                id="id_item"
+                name="item"
+                class="form-control"
+                list="available_items"
+                placeholder="Select or type an item..."
+                value="{{ selected_item|default:'' }}"
+                required
+            />
 
-            <button type="submit" class="btn btn-primary">Submit Request</button>
-            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-    </div>
+            <datalist id="available_items">
+                {% for item in inventory_items %}
+                    <option value="{{ item.name }}"></option>
+                {% endfor %}
+            </datalist>
+
+            {% if form.item.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{ form.item.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.reason.id_for_label }}" class="form-label">
+                Reason <span class="text-danger">*</span>
+            </label>
+
+            {{ form.reason }}
+
+            {% if form.reason.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{ form.reason.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_priority" class="form-label">
+                Priority <span class="text-danger">*</span>
+            </label>
+
+            {{ form.priority }}
+
+            {% if form.priority.errors %}
+                <div class="alert alert-danger mt-2">
+                    {{ form.priority.errors|striptags }}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Request</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
 {% endblock %}
