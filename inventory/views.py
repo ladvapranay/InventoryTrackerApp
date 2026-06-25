@@ -8,6 +8,8 @@ from .models import InventoryItem, InventoryRequest
 from .forms import RequestForm, AdminRequestForm
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 def register(request):
@@ -21,6 +23,12 @@ def register(request):
             messages.error(request, "Passwords do not match.")
             return redirect('register')
 
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            messages.error(request, " ".join(e.messages))
+            return redirect('register')
+
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.")
             return redirect('register')
@@ -29,14 +37,18 @@ def register(request):
             messages.error(request, "Email is already registered.")
             return redirect('register')
 
-        user = User.objects.create_user(username=username, email=email, password=password)
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
         user.save()
         messages.success(request, "Account created successfully!")
         login(request, user)
         return redirect('dashboard')
 
     return render(request, 'registration/register.html')
-
 
 @login_required
 def dashboard(request):
