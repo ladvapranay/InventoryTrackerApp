@@ -6,7 +6,8 @@ from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import InventoryItem, InventoryRequest
 from .forms import RequestForm, AdminRequestForm
-
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -40,23 +41,55 @@ def register(request):
 def dashboard(request):
     if request.user.is_staff:
         requests = InventoryRequest.objects.all()
-        current_requests_count = InventoryRequest.objects.exclude(status__in=['Approved', 'Rejected']).count()
         is_admin = True
     else:
         requests = InventoryRequest.objects.filter(requested_by=request.user)
-        current_requests_count = InventoryRequest.objects.filter(
-            requested_by=request.user
-        ).exclude(status__in=['Approved', 'Rejected']).count()
         is_admin = False
+
+    search_query = request.GET.get('search', '').strip()
+    status_filter = request.GET.get('status', '').strip()
+
+    if search_query:
+        requests = requests.filter(
+            Q(item__name__icontains=search_query) |
+            Q(reason__icontains=search_query) |
+            Q(priority__icontains=search_query) |
+            Q(requested_by__username__icontains=search_query)
+        )
+
+    if status_filter:
+        requests = requests.filter(status=status_filter)
+
+    requests = requests.order_by('-created_at')
+
+    current_requests_count = requests.exclude(status__in=['Approved', 'Rejected']).count()
+    total_requests = requests.count()
+    new_count = requests.filter(status='New').count()
+    in_progress_count = requests.filter(status='In Progress').count()
+    approved_count = requests.filter(status='Approved').count()
+    rejected_count = requests.filter(status='Rejected').count()
+
+    paginator = Paginator(requests, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     available_inventories = InventoryItem.objects.all()[:3]
 
     context = {
-        'requests': requests,
+        'requests': page_obj,
+        'page_obj': page_obj,
         'current_requests_count': current_requests_count,
         'available_inventories': available_inventories,
         'is_admin': is_admin,
-        'user_name': request.user.username if request.user.is_authenticated else "Guest"
+        'user_name': request.user.username,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'status_choices': InventoryRequest.STATUS_CHOICES,
+        'total_requests': total_requests,
+        'new_count': new_count,
+        'in_progress_count': in_progress_count,
+        'approved_count': approved_count,
+        'rejected_count': rejected_count,
     }
 
     return render(request, 'dashboard.html', context)

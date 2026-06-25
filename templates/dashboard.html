@@ -126,6 +126,72 @@
         <strong>{{ user.username|title }}</strong> to Itemize!
     </h1>
 
+    <div class="row mb-3">
+    <div class="col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>Total</h6>
+                <h3>{{ total_requests }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>New</h6>
+                <h3>{{ new_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>In Progress</h6>
+                <h3>{{ in_progress_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>Approved</h6>
+                <h3>{{ approved_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h6>Rejected</h6>
+                <h3>{{ rejected_count }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form method="get" class="row mb-3">
+    <div class="col-md-6">
+        <input type="text" name="search" class="form-control"
+               placeholder="Search by item, reason, priority or user"
+               value="{{ search_query }}">
+    </div>
+
+    <div class="col-md-4">
+        <select name="status" class="form-select">
+            <option value="">All Statuses</option>
+            {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Apply</button>
+    </div>
+</form>
+
     <div class="scrollable-table-container">
         <table class="table table-striped">
             <thead>
