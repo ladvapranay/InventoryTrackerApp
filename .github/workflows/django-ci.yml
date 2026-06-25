@@ -1,3 +1,4 @@
+# Continuous Integration workflow for the Inventory Tracker application
 name: Django CI
 
 on:

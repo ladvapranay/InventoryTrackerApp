@@ -94,3 +94,4 @@ class InventoryAppTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertFalse(User.objects.filter(username="mismatchuser").exists())
+
